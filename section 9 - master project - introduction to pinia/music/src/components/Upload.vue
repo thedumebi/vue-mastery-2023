@@ -21,25 +21,22 @@
       </div>
       <input type="file" multiple @change="upload($event)" />
       <hr class="my-6" />
+
       <!-- Progess Bars -->
-      <div class="mb-4">
+      <div class="mb-4" v-for="upload in uploads" :key="upload.name">
         <!-- File Name -->
-        <div class="font-bold text-sm">Just another song.mp3</div>
-        <div class="flex h-4 overflow-hidden bg-gray-200 rounded">
-          <!-- Inner Progress Bar -->
-          <div class="transition-all progress-bar bg-blue-400" style="width: 75%"></div>
+        <div class="font-bold text-sm" :class="upload.text_class">
+          <i :class="upload.icon"></i>
+          {{ upload.name }}
         </div>
-      </div>
-      <div class="mb-4">
-        <div class="font-bold text-sm">Just another song.mp3</div>
+
+        <!-- Inner Progress Bar -->
         <div class="flex h-4 overflow-hidden bg-gray-200 rounded">
-          <div class="transition-all progress-bar bg-blue-400" style="width: 35%"></div>
-        </div>
-      </div>
-      <div class="mb-4">
-        <div class="font-bold text-sm">Just another song.mp3</div>
-        <div class="flex h-4 overflow-hidden bg-gray-200 rounded">
-          <div class="transition-all progress-bar bg-blue-400" style="width: 55%"></div>
+          <div
+            class="transition-all progress-bar"
+            :class="upload.variant"
+            :style="{ width: `${upload.current_progress}%` }"
+          ></div>
         </div>
       </div>
     </div>
@@ -47,12 +44,13 @@
 </template>
 
 <script>
-import { addDoc, getDoc } from 'firebase/firestore'
+import { addDoc } from 'firebase/firestore'
 import { storage, auth, songsCollection } from '@/includes/firebase'
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
 
 export default {
   name: 'Upload',
+  emits: ['newSong'],
   data() {
     return {
       is_dragover: false,
@@ -72,6 +70,19 @@ export default {
 
         const task = uploadBytesResumable(storageRef, file)
 
+        // if no network
+        if (!navigator.onLine) {
+          this.uploads.push({
+            task: {},
+            current_progress: 100,
+            name: file.name,
+            variant: 'bg-red-400',
+            icon: 'fas fa-times',
+            text_class: 'text-red-400'
+          })
+          return
+        }
+
         const uploadIndex =
           this.uploads.push({
             task,
@@ -81,17 +92,18 @@ export default {
             icon: 'fas fa-spinner fa-spin',
             text_class: ''
           }) - 1
+
         task.on(
           'state_changed',
           (snapshot) => {
             const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
             this.uploads[uploadIndex].current_progress = progress
           },
-          (error) => {
+          (_error) => {
             this.uploads[uploadIndex].variant = 'bg-red-400'
             this.uploads[uploadIndex].icon = 'fas fa-times'
             this.uploads[uploadIndex].text_class = 'text-red-400'
-            console.log(error)
+            // console.log(error)
           },
           async () => {
             const song = {
@@ -105,8 +117,10 @@ export default {
 
             song.url = await getDownloadURL(task.snapshot.ref)
             const songRef = await addDoc(songsCollection, song)
-            const songSnapshot = await getDoc(songRef)
-            console.log(songSnapshot)
+
+            // add song to list
+            const newSong = { ...song, docID: songRef.id }
+            this.$emit('newSong', newSong)
 
             this.uploads[uploadIndex].variant = 'bg-green-400'
             this.uploads[uploadIndex].icon = 'fas fa-check'
@@ -114,7 +128,17 @@ export default {
           }
         )
       })
+    },
+    cancelUploads() {
+      this.uploads.forEach((upload) => {
+        upload.task.cancel()
+      })
     }
+  },
+  beforeUnmount() {
+    this.uploads.forEach((upload) => {
+      upload.task.cancel()
+    })
   }
 }
 </script>

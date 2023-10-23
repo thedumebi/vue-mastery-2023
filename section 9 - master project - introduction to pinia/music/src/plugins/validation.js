@@ -25,6 +25,7 @@ export default {
     app.component('ErrorMessage', ErrorMessage)
 
     defineRule('required', required)
+    defineRule('song_name', required)
     defineRule('tos', required)
     defineRule('min', min)
     defineRule('max', max)
@@ -49,7 +50,8 @@ export default {
           passwords_mismatch: `The passwords don't match.`,
           excluded: `You are not allowed to use this value for the field ${ctx.field}.`,
           country_excluded: `Due to restrictions, we do not accept users from this location.`,
-          tos: 'You must accept the Terms and Service.'
+          tos: 'You must accept the Terms and Service.',
+          song_name: 'You must provide a song name.'
         }
 
         const message = messages[ctx.rule.name]
