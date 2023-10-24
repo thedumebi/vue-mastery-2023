@@ -1,6 +1,6 @@
 <template>
-  <!-- Auth Modal -->
   <div class="fixed z-10 inset-0 overflow-y-auto" id="modal" :class="hiddenClass">
+    <!-- Auth Modal -->
     <div
       class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
     >
@@ -68,7 +68,7 @@ import LoginForm from './LoginForm.vue'
 import RegisterForm from './RegisterForm.vue'
 
 export default {
-  name: 'Auth',
+  name: 'AuthModal',
   components: {
     LoginForm,
     RegisterForm

@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import SongVue from '@/views/Song.vue'
 import HomeVue from '../views/Home.vue'
 import AboutVue from '@/views/About.vue'
 import ManageVue from '@/views/Manage.vue'
@@ -25,6 +26,10 @@ const routes = [{
 }, {
   path: '/manage',
   redirect: { name: 'manage' }
+}, {
+  path: '/song/:id',
+  name: 'song',
+  component: SongVue
 },{
   path: '/:catchAll(.*)*',
   redirect: { name: 'home' }

@@ -1,6 +1,6 @@
 <template>
-  <!-- Main Content -->
   <section class="container mx-auto mt-6">
+    <!-- Main Content -->
     <div class="md:grid md:grid-cols-3 md:gap-4">
       <div class="col-span-1">
         <app-upload ref="upload" @new-song="addSong" />
@@ -63,7 +63,6 @@ export default {
       this.songs.splice(i, 1)
     },
     addSong(song) {
-      console.log(song)
       this.songs.unshift(song)
     },
     updateUnsavedFlag(value) {

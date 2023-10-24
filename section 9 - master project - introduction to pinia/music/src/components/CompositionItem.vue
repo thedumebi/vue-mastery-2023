@@ -71,7 +71,7 @@
 </template>
 
 <script>
-import { db } from '@/includes/firebase'
+import { songsCollection } from '@/includes/firebase'
 import { doc, updateDoc, deleteDoc } from 'firebase/firestore'
 
 export default {
@@ -102,7 +102,7 @@ export default {
       this.alert_message = 'Please wait! Updating song info.'
 
       try {
-        const songRef = doc(db, 'songs', this.song.docID)
+        const songRef = doc(songsCollection, this.song.docID)
 
         await updateDoc(songRef, values)
       } catch (error) {
@@ -123,7 +123,7 @@ export default {
       }, 1000)
     },
     async deleteSong() {
-      const songRef = doc(db, 'songs', this.song.docID)
+      const songRef = doc(songsCollection, this.song.docID)
 
       try {
         await deleteDoc(songRef)
