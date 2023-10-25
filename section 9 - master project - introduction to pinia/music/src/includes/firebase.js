@@ -15,6 +15,12 @@ const firebase = initializeApp({
 })
 
 const auth = getAuth(firebase)
+// persistence isnt working well
+// const db = initializeFirestore(firebaseApp, {
+//   localCache: persistentLocalCache({
+//     tabManager: persistentSingleTabManager()
+//   })
+// })
 const db = getFirestore(firebase)
 const storage = getStorage(firebase)
 

@@ -66,10 +66,6 @@ export default {
       files.forEach((file) => {
         if (file.type !== 'audio/mpeg') return
 
-        const storageRef = ref(storage, `songs/${file.name}`) // 'music-202310.appspot.com/songs/example.mp3
-
-        const task = uploadBytesResumable(storageRef, file)
-
         // if no network
         if (!navigator.onLine) {
           this.uploads.push({
@@ -82,6 +78,10 @@ export default {
           })
           return
         }
+
+        const storageRef = ref(storage, `songs/${file.name}`) // 'music-202310.appspot.com/songs/example.mp3
+
+        const task = uploadBytesResumable(storageRef, file)
 
         const uploadIndex =
           this.uploads.push({
