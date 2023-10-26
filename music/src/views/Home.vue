@@ -12,7 +12,8 @@
           <p class="w-full md:w-8/12 mx-auto">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus et dolor mollis,
             congue augue non, venenatis elit. Nunc justo eros, suscipit ac aliquet imperdiet,
-            venenatis et sapien. Duis sed magna pulvinar, fringilla lorem eget, ullamcorper urna.
+            venenatis et sapien. Duis sed magna pulvinar, fringilla lorem eget, ullamcorper urna,
+            CIBH.
           </p>
         </div>
       </div>
