@@ -1,9 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import SongVue from '@/views/Song.vue'
-import HomeVue from '../views/Home.vue'
-import AboutVue from '@/views/About.vue'
-import ManageVue from '@/views/Manage.vue'
 import { useUserStore } from '@/stores/user'
+
+const HomeVue = () => import('@/views/Home.vue')
 
 const routes = [{
   path: '/',
@@ -13,11 +11,11 @@ const routes = [{
 }, {
   path: '/about',
   name: 'about',
-  component: AboutVue
+  component: () => import('@/views/About.vue')
 }, {
   path: '/manage-music',
   name: 'manage',
-  component: ManageVue,
+  component: () => import('@/views/Manage.vue'),
   meta: { requiresAuth: true },
   beforeEnter: (_to, _from, next) => {
     // console.log("Manage Route Guard")
@@ -29,7 +27,7 @@ const routes = [{
 }, {
   path: '/song/:id',
   name: 'song',
-  component: SongVue
+  component: () => import('@/views/Song.vue')
 },{
   path: '/:catchAll(.*)*',
   redirect: { name: 'home' }
